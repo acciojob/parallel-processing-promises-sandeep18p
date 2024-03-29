@@ -7,12 +7,12 @@ const images = [
   { url: "https://picsum.photos/id/239/200/300" },
 ];
 
-btn.addEventListener("click", downloadAndDisplayImages);
+btn.addEventListener("click", downloadDisplayImages);
 
-function downloadAndDisplayImages() {
-    Promise.all(images.map(downloadImage))
+function downloadDisplayImages() {
+    Promise.all(images.map(downloadImg))
         .then((imageElements) => {
-            output.innerHTML = ''; // Clear previous content
+            output.innerHTML = "";
             imageElements.forEach((img) => {
                 output.appendChild(img);
             });
@@ -22,10 +22,11 @@ function downloadAndDisplayImages() {
         });
 }
 
-function downloadImage(image) {
-    return new Promise((resolve) => {
-        const img = document.createElement('img');
+function downloadImg(image) {
+    return new Promise((resolve, reject) => {
+        const img = document.createElement("img");
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error(`Failed to load image's URL: ${image.url}`));
         img.src = image.url;
-        resolve(img);
     });
 }
